@@ -1,4 +1,4 @@
-package com.example.shutterflyassignment.data.remote
+package com.example.shutterflyassignment.data.local
 
 data class Genre(
     val id: Int,

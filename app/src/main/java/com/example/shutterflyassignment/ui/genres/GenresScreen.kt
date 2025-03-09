@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -22,53 +23,51 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.shutterflyassignment.data.remote.Movie
 import com.example.shutterflyassignment.ui.genres.composable.MovieItem
+
 
 @Composable
 fun GenresScreen(
     viewModel: GenresScreenViewModel = hiltViewModel()
 ) {
-    val isLoading = viewModel.isLoadingGenres
     val genres = viewModel.genres
     val selectedTabIndex = viewModel.selectedTabIndex
+    val movies = viewModel.movies
+    val isLoadingGenres = viewModel.isLoadingGenres
 
-    // Automatically load genres once the composable is visible
+    // Load genres when this composable is first shown
     LaunchedEffect(Unit) {
         viewModel.loadGenres()
     }
 
-    // For now, we can just show a dummy list.
-    val dummyMovies = remember {
-        (1..20).map { index ->
-            Movie(id = index, title = "Movie $index", releaseYear = "2023", posterPath = "")
+    // Once genres have arrived, load movies for the first genre
+    LaunchedEffect(genres) {
+        if (genres.isNotEmpty() && movies.isEmpty()) {
+            viewModel.loadMoviesByGenre(genres.first())
         }
     }
 
     Scaffold(
-        topBar = { TopBar() },
+        topBar = { TopBar() }
     ) { paddingValues ->
-        // The main content
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
             when {
-                isLoading -> {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                isLoadingGenres -> {
+                    CircularProgressIndicator(Modifier.align(Alignment.Center))
                 }
                 genres.isEmpty() -> {
-                    Text("No genres found", modifier = Modifier.align(Alignment.Center))
+                    Text("No genres found", Modifier.align(Alignment.Center))
                 }
                 else -> {
+                    // Show tab row and 2-col grid of movies
                     Column(Modifier.fillMaxSize()) {
-                        // Scrollable tab row for all genres
                         ScrollableTabRow(selectedTabIndex = selectedTabIndex) {
                             genres.forEachIndexed { index, genre ->
                                 Tab(
@@ -79,14 +78,9 @@ fun GenresScreen(
                             }
                         }
 
-                        // Show a 2-column grid of movies
-                        LazyVerticalGrid(
-                            columns = GridCells.Fixed(2),
-                            contentPadding = PaddingValues(8.dp),
-                            modifier = Modifier.weight(1f)
-                        ) {
-                            items(dummyMovies.size) { index ->
-                                MovieItem(movie = dummyMovies[index])
+                        LazyVerticalGrid(columns = GridCells.Fixed(2)) {
+                            items(movies) { movie ->
+                                MovieItem(movie)
                             }
                         }
                     }
