@@ -14,7 +14,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,7 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -59,10 +57,10 @@ fun GenresScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .gradientBackground() // Apply the fixed gradient
+            .gradientBackground()
     ) {
         Scaffold(
-            containerColor = Color.Transparent, // Ensure Scaffold doesn't override the gradient
+            containerColor = Color.Transparent,
             topBar = { TopBar() }
         ) { paddingValues ->
             Column(
@@ -89,7 +87,7 @@ fun GenreTabs(viewModel: GenresScreenViewModel) {
 
     ScrollableTabRow(
         selectedTabIndex = selectedTabIndex,
-        containerColor = Color.Transparent // Set the container color to transparent
+        containerColor = Color.Transparent
     ) {
         genres.forEachIndexed { index, genre ->
             Tab(
@@ -143,7 +141,7 @@ fun TopBar() {
             }
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = Color.Transparent, // Transparent to blend with gradient
+            containerColor = Color.Transparent,
             titleContentColor = MaterialTheme.colorScheme.onBackground
         )
     )

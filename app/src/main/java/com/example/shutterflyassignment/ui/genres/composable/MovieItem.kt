@@ -24,14 +24,14 @@ import com.example.shutterflyassignment.data.local.Movie
 fun MovieItem(movie: Movie) {
     Column(
         modifier = Modifier
-            .padding(8.dp)  // Add spacing around each movie item
+            .padding(8.dp)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(2f / 3f)  // Keep movie poster's aspect ratio
-                .clip(RoundedCornerShape(12.dp))  // Round corners
-                .background(MaterialTheme.colorScheme.surfaceVariant) // Placeholder background
+                .clip(RoundedCornerShape(12.dp))
+                .background(MaterialTheme.colorScheme.surfaceVariant)
         ) {
             AsyncImage(
                 model = movie.posterPath,
@@ -41,7 +41,7 @@ fun MovieItem(movie: Movie) {
             )
         }
 
-        Spacer(modifier = Modifier.height(8.dp)) // Add spacing between poster and text
+        Spacer(modifier = Modifier.height(8.dp))
 
         Text(
             text = movie.title,

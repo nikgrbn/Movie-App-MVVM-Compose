@@ -32,7 +32,7 @@ class GenreRepositoryImpl @Inject constructor(
         if (response.isSuccessful) {
             val dtoList = response.body()?.results.orEmpty()
             return dtoList.map { dto: MovieDto ->
-                // Parse the year from release date if possible (e.g. "1972-03-14" -> "1972")
+                // Parse the year
                 val year = dto.release_date?.takeIf { it.length >= 4 }?.substring(0, 4) ?: "N/A"
 
                 // Hardcode a base URL or fetch from /configuration if you prefer
@@ -48,7 +48,6 @@ class GenreRepositoryImpl @Inject constructor(
                 )
             }
         } else {
-            // Log or handle error
             println("Failed to fetch movies: ${response.code()} ${response.message()}")
             return emptyList()
         }
