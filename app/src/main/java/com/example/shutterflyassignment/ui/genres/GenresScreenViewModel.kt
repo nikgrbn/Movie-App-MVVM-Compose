@@ -1,4 +1,4 @@
-package com.example.shutterflyassignment
+package com.example.shutterflyassignment.ui.genres
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -12,27 +12,29 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class GenresScreenViewModel @Inject constructor(
     private val genreRepository: GenreRepository
 ) : ViewModel() {
 
-    // UI State
-    var genres by mutableStateOf<List<Genre>>(emptyList())
+    var genres by mutableStateOf(emptyList<Genre>())
         private set
 
     var isLoadingGenres by mutableStateOf(false)
         private set
 
+    // Stores which genre tab is currently selected
+    var selectedTabIndex by mutableStateOf(0)
+        private set
 
-    // Load genres from the repository
     fun loadGenres() {
         viewModelScope.launch {
             isLoadingGenres = true
-
-            // Fetch genres from the repository
             genres = genreRepository.fetchGenres()
-
             isLoadingGenres = false
         }
+    }
+
+    fun onTabSelected(index: Int) {
+        selectedTabIndex = index
     }
 }
